@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт с вопросом</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            background-color: #8b8c8d; /* Серый фон */
+            overflow: hidden; /* Убираем прокрутку */
+        }
+
+        .question-block {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgb(0, 0, 0);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0); /* Полупрозрачный цвет */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.572);
+            z-index: 1; /* На переднем плане */
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Тень кнопок */
+        }
+
+        .yes-button {
+            background-color: #4CAF50;
+            color: rgb(0, 0, 0);
+        }
+
+        .no-button {
+            background-color: #FF5722;
+            color: rgb(0, 0, 0);
+            position: relative;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #000000;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .question-block {
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .message {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="question-block" id="questionBlock">
+    <h2>Ты далбаеп?</h2>
+    <div class="buttons">
+        <button class="button yes-button" id="yesButton">Да</button>
+        <button class="button no-button" id="noButton">Нет</button>
+    </div>
+</div>
+
+<div class="message" id="message"></div>
+
+<script>
+    const noButton = document.getElementById('noButton');
+    const yesButton = document.getElementById('yesButton');
+    const messageDiv = document.getElementById('message');
+    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let noButtonAttempts = 0; // Счетчик нажатий на кнопку "Нет"
+
+    // Функция для удаления блока с вопросом и показа сообщения
+    function removeBlock(message) {
+        const block = document.getElementById('questionBlock');
+        block.style.display = 'none';
+
+        messageDiv.textContent = message;
+        messageDiv.style.display = 'block';
+    }
+
+    // Функция для перемещения кнопки "Нет"
+    function moveButton() {
+        const randomX = Math.floor(Math.random() * 200) - 100; // случайное смещение по X
+        const randomY = Math.floor(Math.random() * 200) - 100; // случайное смещение по Y
+        noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    // Функция для обработки кнопки "Нет"
+    function handleNoButton() {
+        noButtonAttempts++;
+        if (noButtonAttempts < 30) {
+            moveButton();
+        } else {
+            removeBlock("Хороший человечешка малодец!");
+        }
+    }
+
+    // Обработчик для кнопки "Да"
+    function handleYesButton() {
+        removeBlock("Я знал!");
+    }
+
+    // Применяем соответствующее поведение кнопки в зависимости от устройства
+    if (isMobile) {
+        // На мобильных устройствах кнопка убегает при нажатии
+        noButton.onclick = handleNoButton;
+        yesButton.onclick = handleYesButton; // Обработчик для кнопки "Да"
+    } else {
+        // На ПК кнопка убегает при наведении курсора
+        noButton.onmouseover = moveButton;
+        noButton.onclick = handleNoButton; // Кнопка "Нет"
+        yesButton.onclick = handleYesButton; // Кнопка "Да"
+    }
+</script>
+
+</body>
+</html>
